@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --open --hot",
-    "prod": "webpack -p"
+    "build": "webpack",
+    "build:prod": "webpack -p"
   },
   "keywords": [],
   "author": "Daniel Kemeny <daniel.kemeny@digital-jobs.de",

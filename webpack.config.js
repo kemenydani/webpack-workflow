@@ -7,7 +7,7 @@ var extractPlugin = new ExtractTextPlugin({
 });
 
 module.exports = {
-    entry: './src/js/index.js',
+    entry:'./src/js/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/bundle.js',
@@ -18,7 +18,9 @@ module.exports = {
       historyApiFallback: true,
       hot: true,
       open: true,
-      port: 8095
+      port: 8095,
+      inline: false,
+      quiet: true
     },
     resolve: {
       alias: {
@@ -63,12 +65,24 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-          $: "jquery",
-          jQuery: "jquery"
+          //$: "jquery",
+          //jQuery: "jquery"
         }),
         extractPlugin,
         new HtmlWebpackPlugin({
           template: 'src/index.html'
         })
+      /*
+        new webpack.optimize.UglifyJsPlugin({
+          sourceMap: true,
+          ie8: true,
+          compress: false,
+          mangle: false,
+          output: {
+            comments: false,
+            beautify: false
+          },
+        })
+        */
     ]
 };
