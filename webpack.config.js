@@ -53,7 +53,7 @@ const config = {
             },
             {
               test: /\.html$/,
-              use: ['html-loader']
+              loader: 'html-loader?minimize=false'
             },
             {
               test: /\.(jpg|png)$/,
