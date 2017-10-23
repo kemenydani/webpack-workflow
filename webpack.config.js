@@ -1,17 +1,22 @@
+const ENV = process.env.NODE_ENV;
+
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var pkg = require('./package.json');
 var extractPlugin = new ExtractTextPlugin({
   filename: 'css/main.css'
 });
 
-module.exports = {
-    entry:'./src/js/index.js',
+const config = {
+    entry: {
+      app: './src/js/index.js',
+      //vendor: Object.keys(pkg.dependencies)
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'js/bundle.js',
-       // publicPath: '/'
+        filename: ENV === 'production' ? 'js/bundle.min.js' : 'js/bundle.js',
     },
     devServer: {
       contentBase: './src',
@@ -71,18 +76,34 @@ module.exports = {
         extractPlugin,
         new HtmlWebpackPlugin({
           template: 'src/index.html'
-        })
-      /*
-        new webpack.optimize.UglifyJsPlugin({
-          sourceMap: true,
-          ie8: true,
-          compress: false,
-          mangle: false,
-          output: {
-            comments: false,
-            beautify: false
-          },
-        })
-        */
+        }),
+        //new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.min-[hash:6].js'}),
     ]
 };
+
+if (ENV === 'production') {
+
+    config.devtool = '#source-map'
+    config.plugins = (config.plugins || []).concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"production"'
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        sourceMap: false,
+        ie8: true,
+        mangle: true,
+        compress: {
+          warnings: false
+        },
+        output: {
+          comments: false
+        },
+      }),
+      new webpack.LoaderOptionsPlugin({
+        minimize: true
+      })
+    ])
+    module.exports = config;
+}
